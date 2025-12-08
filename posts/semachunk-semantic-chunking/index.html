@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href=https://geleto.github.io/posts/semachunk-semantic-chunking/>
+    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Feed">
+
+    <link href="/assets/main.a338f6455ce1248c5e87.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+
+    <title>
+      semachunk: Minimal Semantic Chunker for RAG
+      
+         | Angel Popov&#39;s Blog
+      
+    </title>
+
+    <link rel="icon" type= “image/x-icon” href="/images/favicon.ico">
+
+    <meta property="og:title" content="semachunk: Minimal Semantic Chunker for RAG">
+    <meta property="og:site_name" content="Angel Popov&#39;s Blog"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://geleto.github.io/posts/semachunk-semantic-chunking/"/>
+    <meta name="twitter:card" content="summary_large_image">
+
+    
+      <meta name="twitter:creator" content="@geleto"/>
+    
+
+    
+    
+    
+      <meta name="description" content="semachunk is a tiny, model-agnostic semantic chunker for RAG pipelines that works with any embedding provider and is designed for batch-friendly, infrastructure-free usage.">
+      <meta property="og:description" content="semachunk is a tiny, model-agnostic semantic chunker for RAG pipelines that works with any embedding provider and is designed for batch-friendly, infrastructure-free usage.">
+      <meta name="description" content="semachunk is a tiny, model-agnostic semantic chunker for RAG pipelines that works with any embedding provider and is designed for batch-friendly, infrastructure-free usage."/>
+    
+
+    
+    
+      <meta property="og:image" content="https://geleto.github.io/images/headers/semachunk_social.jpg"/>
+      <meta name="twitter:image" content="https://geleto.github.io/images/headers/semachunk_social.jpg"/>
+    
+
+    
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>mermaid.initialize({startOnLoad:true});</script>
+    
+  </head>
+  <body>
+    <div class="layout-wrapper">
+
+      <header class="header">
+        <div class="header__content">
+          <h1 class="site-title">
+            <a href=/>
+              Angel Popov&#39;s Blog
+            </a>
+          </h1>
+
+          
+            <nav class="nav">
+              <ul class="nav__list">
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/blog"  >Blog</a>
+                  </li>
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/about"  >About</a>
+                  </li>
+                
+              </ul>
+            </nav>
+
+          
+
+        </div>
+      </header>
+
+      <main class="main">
+        
+<article class="post">
+  <header class="post__header">
+    
+      <div class="post__header-image">
+        <img src="/images/headers/semachunk.jpg" alt="semachunk: Minimal Semantic Chunker for RAG" class="post__header-img">
+      </div>
+    
+    <h1>semachunk: Minimal Semantic Chunker for RAG</h1>
+    <div class="post__details">
+      <time datetime="2025-11-27">
+        27 Nov 2025
+      </time>
+      <span> | </span>
+      <span>3 min read</span>
+    </div>
+  </header>
+
+  <main class="post__content">
+    <p>When building the <a href="https://github.com/geleto/casai-examples">examples</a> for <a href="https://github.com/geleto/casai">Casai</a> - my AI workflow framework - I wanted to include a proper RAG (Retrieval-Augmented Generation) example. Not a toy demo, but something that showed semantic chunking, vector search, and agentic filtering working together.</p>
+<p>I hit a wall almost immediately: I couldn't find a TypeScript semantic chunker that fit my needs.</p>
+<h2>The Problem</h2>
+<p>Most semantic chunking libraries fall into one of three camps:</p>
+<ol>
+<li>
+<p><strong>Heavy solutions</strong> that bundle their own embedding models, require downloads, spin up services, come with big frameworks and pull in massive dependencies</p>
+</li>
+<li>
+<p><strong>Not API/provider agnostic</strong>  -  tightly coupled to a specific embedding provider or API, instead of letting you plug in your own embedding API of choice</p>
+</li>
+<li>
+<p><strong>Fixed-size chunkers</strong> that just split on character count or tokens - missing the whole point of <em>semantic</em> chunking</p>
+</li>
+<li>
+<p><strong>No batch embedding</strong>  -  they merge chunks sequentially, firing off a new embedding request after every single merge. Fine for local models, but hostile to API rate limits.</p>
+</li>
+</ol>
+<p>I needed something different. For an examples repo, I wanted:</p>
+<ul>
+<li><strong>Zero infrastructure</strong>  -  no containers, no model downloads, no services</li>
+<li><strong>Model agnostic</strong>  -  let users plug in whatever embedding provider they're already using (OpenAI, Anthropic, Google, local models, whatever)</li>
+<li><strong>Batch-friendly</strong>  -  work <em>with</em> API rate limits, not against them</li>
+<li><strong>Simple API</strong>  -  a single function call, not a framework</li>
+</ul>
+<h2>The Solution: semachunk</h2>
+<p>I used <a href="https://github.com/jparkerweb/semantic-chunking">semantic-chunking</a> as a base - it has solid chunking implementation - and built <a href="https://github.com/geleto/semachunk">semachunk</a>, wrapping it in a callback-based API, and replacing the core merging algorithm with a new one that's optimized for batch embeddings, and is both more efficient and should produce better results (instead of merging linearly, it scores all adjacent chunk pairs, selects the best candidates, merges them in one pass, then batch re-embeds).</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> chunkText <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'semachunk'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Chunk the document semantically</span>
+<span class="token keyword">const</span> chunks <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">chunkText</span><span class="token punctuation">(</span>document<span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>texts<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Your embedding logic - any provider, any model</span>
+    <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> openai<span class="token punctuation">.</span>embeddings<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        input<span class="token operator">:</span> texts<span class="token punctuation">,</span>
+        model<span class="token operator">:</span> <span class="token string">"text-embedding-3-small"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> response<span class="token punctuation">.</span>data<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>d <span class="token operator">=></span> d<span class="token punctuation">.</span>embedding<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    maxChunkSize<span class="token operator">:</span> <span class="token number">500</span><span class="token punctuation">,</span>
+    similarityThreshold<span class="token operator">:</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+    returnEmbedding<span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Store in vector index</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> chunk <span class="token keyword">of</span> chunks<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">await</span> index<span class="token punctuation">.</span><span class="token function">upsertItem</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        vector<span class="token operator">:</span> chunk<span class="token punctuation">.</span>embedding<span class="token punctuation">,</span>
+        metadata<span class="token operator">:</span> <span class="token punctuation">{</span> text<span class="token operator">:</span> chunk<span class="token punctuation">.</span>text <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>That's it. You provide the text and an embedding function, you get back semantically coherent chunks ready for your vector store. No configuration files, no model downloads, no Docker containers.</p>
+<h2>A New Algorithm</h2>
+<p>The original semantic-chunking library didn't support batch embedding, and its merging algorithm wasn't structured in a way that made adding it straightforward - it merges chunks linearly, one pair at a time. So I wrote a new algorithm designed from the ground up to work in batches:</p>
+<ol>
+<li>Score <em>all</em> adjacent chunk pairs by similarity</li>
+<li>Select the best merge candidates (configurable percentage)</li>
+<li>Merge them in one pass</li>
+<li>Batch re-embed all affected chunks</li>
+<li>Repeat until no good merges remain</li>
+</ol>
+<p>This should produce better results (by considering all candidates globally rather than just the next pair) and drastically reduces API calls. Instead of potentially hundreds of single-embedding requests, you get a handful of batch requests.</p>
+<p>The chunks preserve semantic coherence - a paragraph about a specific topic stays together rather than getting split mid-thought. This matters when you're retrieving context for an LLM; fragmented chunks lead to fragmented understanding.</p>
+<h2>Trade-offs</h2>
+<p>To be transparent: I haven't battle-tested this extensively. I built it for the Casai examples, and it works well for that use case. If you're processing millions of documents in production, you'll want to do your own evaluation.</p>
+<p>The library is intentionally minimal. Just the core semantic chunking algorithm with a clean API.</p>
+<h2>Try It</h2>
+<p>Install directly:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> semachunk</code></pre>
+<p>Or see it in action with the RAG example in <a href="https://github.com/geleto/casai-examples">casai-examples</a>:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/geleto/casai-examples.git
+<span class="token builtin class-name">cd</span> casai-examples
+<span class="token function">npm</span> <span class="token function">install</span>
+<span class="token function">npm</span> run example <span class="token number">14</span></code></pre>
+<p>GitHub: <a href="https://github.com/geleto/semachunk">github.com/geleto/semachunk</a></p>
+<p>If you're building RAG pipelines and want semantic chunking without the infrastructure overhead, give it a try. Feedback and contributions welcome.</p>
+<p><em>semachunk is derived from <a href="https://github.com/jparkerweb/semantic-chunking">semantic-chunking</a> by jparkerweb. Check out the original if you need local model support.</em></p>
+
+  </main>
+
+  <aside class="post__aside">
+    <div class="post__tags">
+      
+        
+        <a href="/tags/rag/">#rag</a>
+      
+        
+        <a href="/tags/semantic-chunking/">#semantic-chunking</a>
+      
+        
+        <a href="/tags/embeddings/">#embeddings</a>
+      
+        
+        <a href="/tags/typescript/">#typescript</a>
+      
+        
+        <a href="/tags/open-source/">#open-source</a>
+      
+    </div>
+
+    <nav class="post__pagination">
+
+        <a href="/posts/cascada-script-intro/">
+          <span>Cascada Script: Parallel by Default, Sequential by Exception</span>
+          <span>→</span>
+        </a>
+
+      
+    </nav>
+  </aside>
+
+</article>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+
+          <ul class="hero__social-links">
+            
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://github.com/geleto" target="_blank" rel="noopener noreferrer" >GitHub</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://x.com/thegeletohttps://twitter.com/" target="_blank" rel="noopener noreferrer" >X</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://www.linkedin.com/in/angel-popov/" target="_blank" rel="noopener noreferrer" >LinkedIn</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://www.facebook.com/geleto" target="_blank" rel="noopener noreferrer" >Facebook</a>
+                </li>
+              
+            
+
+            
+
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="/feed.xml" target="_blank" rel="noopener noreferrer" >RSS</a>
+                </li>
+              
+            
+          </ul>
+
+          
+            <p class="footer__attribution">
+              <a href="https://www.11ty.dev" target="_blank" rel="noopener">11ty</a> <a href="https://github.com/yinkakun/eleventy-duo" target="_blank" rel="noopener noreferrer"> theme </a> by <a href="https://twitter.com/yinkakun" target="_blank" rel="noopener">Yinka,</a>
+            </p>
+          
+
+        </div>
+      </div>
+
+    </footer>
+
+    <script src="/assets/main.31d6cfe0d16ae931b73c.js"></script>
+  </body>
+</html>
