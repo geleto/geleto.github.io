@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href=https://geleto.github.io/posts/everything-everywhere-all-at-once/>
+    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Feed">
+
+    <link href="/assets/main.a338f6455ce1248c5e87.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+
+    <title>
+      Everything Everywhere All at Once
+      
+         | Angel Popov&#39;s Blog
+      
+    </title>
+
+    <link rel="icon" type= “image/x-icon” href="/images/favicon.ico">
+
+    <meta property="og:title" content="Everything Everywhere All at Once">
+    <meta property="og:site_name" content="Angel Popov&#39;s Blog"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://geleto.github.io/posts/everything-everywhere-all-at-once/"/>
+    <meta name="twitter:card" content="summary_large_image">
+
+    
+      <meta name="twitter:creator" content="@geleto"/>
+    
+
+    
+    
+    
+      <meta name="description" content="Introducing CascadaScript: a programming language where everything runs concurrently by default, and operations only wait when they depend on another result.">
+      <meta property="og:description" content="Introducing CascadaScript: a programming language where everything runs concurrently by default, and operations only wait when they depend on another result.">
+      <meta name="description" content="Introducing CascadaScript: a programming language where everything runs concurrently by default, and operations only wait when they depend on another result."/>
+    
+
+    
+    
+      <meta property="og:image" content="https://geleto.github.io/images/headers/everything_everywhere_all_at_once_social.jpg"/>
+      <meta name="twitter:image" content="https://geleto.github.io/images/headers/everything_everywhere_all_at_once_social.jpg"/>
+    
+
+    
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>mermaid.initialize({startOnLoad:true});</script>
+    
+  </head>
+  <body>
+    <div class="layout-wrapper">
+
+      <header class="header">
+        <div class="header__content">
+          <h1 class="site-title">
+            <a href=/>
+              Angel Popov&#39;s Blog
+            </a>
+          </h1>
+
+          
+            <nav class="nav">
+              <ul class="nav__list">
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/blog"  >Blog</a>
+                  </li>
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/about"  >About</a>
+                  </li>
+                
+              </ul>
+            </nav>
+
+          
+
+        </div>
+      </header>
+
+      <main class="main">
+        
+<article class="post">
+  <header class="post__header">
+    
+      <div class="post__header-image">
+        <img src="/images/headers/everything_everywhere_all_at_once.jpg" alt="Everything Everywhere All at Once" class="post__header-img">
+      </div>
+    
+    <h1>Everything Everywhere All at Once</h1>
+    <div class="post__details">
+      <time datetime="2026-04-29">
+        29 Apr 2026
+      </time>
+      <span> | </span>
+      <span>1 min read</span>
+    </div>
+  </header>
+
+  <main class="post__content">
+    <p>What if there was a programming language where <strong>everything runs at once, concurrently</strong> - every statement, every part of every expression, every step inside every function call, every iteration of every loop, every task in every imported script - and an operation only <strong>waits when it actually depends</strong> on another's result?</p>
+<p>I am building exactly that, and today I'm introducing my <a href="https://github.com/geleto/cascada">project</a>.</p>
+<p><strong><a href="https://geleto.github.io/cascada-script/">CascadaScript</a></strong> inverts the traditional model: concurrent by default, sequential by exception. And the most extraordinary thing about it is how ordinary its syntax is - instantly familiar to any JavaScript or Python developer. No special async syntax, no <code>await</code>, no <code>Promise.all</code>, no race conditions. Just write your logic. The runtime figures out what can run concurrently from data dependencies alone.</p>
+<p>Despite everything running out of order under the hood - all your arrays, objects, and output come out correctly ordered. Always. The final result is identical to sequential execution, just dramatically faster.</p>
+<p>It integrates into TypeScript/JavaScript applications and is particularly well suited for AI and LLM orchestration, data pipelines, ETL workflows, and high-throughput I/O coordination. I've also been building <a href="https://github.com/geleto/casai">Casai</a> - an AI orchestration library on top of it.</p>
+<p>If you're curious:</p>
+<ul>
+<li>⚡ <a href="https://geleto.github.io/posts/cascada-script-intro/">CascadaScript Introduction</a> - the technical introduction article for developers</li>
+<li>🍳 <a href="https://geleto.github.io/posts/cascada-kitchen-chef/">The Kitchen Chef's Guide to Taming Chaos</a> - the intuitive, no-jargon explanation that everyone can understand</li>
+<li>📖 <a href="https://geleto.github.io/cascada-script/">CascadaScript Specification</a> - the full language reference</li>
+<li>🧩 <a href="https://github.com/geleto/cascada">Cascada GitHub Repository</a> - open source · <code>npm install cascada-engine</code></li>
+</ul>
+<p>Feedback very welcome - it's early and it's real.</p>
+<p><strong>Think Sequential. Run Concurrently.</strong></p>
+
+  </main>
+
+  <aside class="post__aside">
+    <div class="post__tags">
+      
+        
+        <a href="/tags/cascada/">#cascada</a>
+      
+        
+        <a href="/tags/async/">#async</a>
+      
+        
+        <a href="/tags/concurrency/">#concurrency</a>
+      
+        
+        <a href="/tags/parallel-programming/">#parallel-programming</a>
+      
+        
+        <a href="/tags/javascript/">#javascript</a>
+      
+        
+        <a href="/tags/typescript/">#typescript</a>
+      
+        
+        <a href="/tags/ai/">#ai</a>
+      
+    </div>
+
+    <nav class="post__pagination">
+
+        <a href="/posts/cascada-script-intro/">
+          <span>←</span>
+          <span>Introduction to CascadaScript: Concurrent by Default, Sequential by Exception</span>
+        </a>
+
+      
+
+        <a href="/posts/semachunk-semantic-chunking/">
+          <span>semachunk: Minimal Semantic Chunker for RAG</span>
+          <span>→</span>
+        </a>
+
+      
+    </nav>
+  </aside>
+
+</article>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+
+          <ul class="hero__social-links">
+            
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://github.com/geleto" target="_blank" rel="noopener noreferrer" >GitHub</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://x.com/thegeletohttps://twitter.com/" target="_blank" rel="noopener noreferrer" >X</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://www.linkedin.com/in/angel-popov/" target="_blank" rel="noopener noreferrer" >LinkedIn</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://www.facebook.com/geleto" target="_blank" rel="noopener noreferrer" >Facebook</a>
+                </li>
+              
+            
+
+            
+
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="/feed.xml" target="_blank" rel="noopener noreferrer" >RSS</a>
+                </li>
+              
+            
+          </ul>
+
+          
+            <p class="footer__attribution">
+              <a href="https://www.11ty.dev" target="_blank" rel="noopener">11ty</a> <a href="https://github.com/yinkakun/eleventy-duo" target="_blank" rel="noopener noreferrer"> theme </a> by <a href="https://twitter.com/yinkakun" target="_blank" rel="noopener">Yinka,</a>
+            </p>
+          
+
+        </div>
+      </div>
+
+    </footer>
+
+    <script src="/assets/main.31d6cfe0d16ae931b73c.js"></script>
+  </body>
+</html>

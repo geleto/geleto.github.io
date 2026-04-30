@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href=https://geleto.github.io/posts/cascada-script-intro/>
+    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Feed">
+
+    <link href="/assets/main.a338f6455ce1248c5e87.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+
+    <title>
+      Introduction to CascadaScript: Concurrent by Default, Sequential by Exception
+      
+         | Angel Popov&#39;s Blog
+      
+    </title>
+
+    <link rel="icon" type= “image/x-icon” href="/images/favicon.ico">
+
+    <meta property="og:title" content="Introduction to CascadaScript: Concurrent by Default, Sequential by Exception">
+    <meta property="og:site_name" content="Angel Popov&#39;s Blog"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://geleto.github.io/posts/cascada-script-intro/"/>
+    <meta name="twitter:card" content="summary_large_image">
+
+    
+      <meta name="twitter:creator" content="@geleto"/>
+    
+
+    
+    
+    
+      <meta name="description" content="A scripting language that turns async programming upside down: everything runs concurrently by default, you never write await, and race conditions are impossible by design. Learn how Cascada&#39;s data-driven execution model eliminates async plumbing while maximizing I/O throughput.">
+      <meta property="og:description" content="A scripting language that turns async programming upside down: everything runs concurrently by default, you never write await, and race conditions are impossible by design. Learn how Cascada&#39;s data-driven execution model eliminates async plumbing while maximizing I/O throughput.">
+      <meta name="description" content="A scripting language that turns async programming upside down: everything runs concurrently by default, you never write await, and race conditions are impossible by design. Learn how Cascada&#39;s data-driven execution model eliminates async plumbing while maximizing I/O throughput."/>
+    
+
+    
+    
+      <meta property="og:image" content="https://geleto.github.io/images/headers/cascada_script_intro_social.jpg"/>
+      <meta name="twitter:image" content="https://geleto.github.io/images/headers/cascada_script_intro_social.jpg"/>
+    
+
+    
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>mermaid.initialize({startOnLoad:true});</script>
+    
+  </head>
+  <body>
+    <div class="layout-wrapper">
+
+      <header class="header">
+        <div class="header__content">
+          <h1 class="site-title">
+            <a href=/>
+              Angel Popov&#39;s Blog
+            </a>
+          </h1>
+
+          
+            <nav class="nav">
+              <ul class="nav__list">
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/blog"  >Blog</a>
+                  </li>
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/about"  >About</a>
+                  </li>
+                
+              </ul>
+            </nav>
+
+          
+
+        </div>
+      </header>
+
+      <main class="main">
+        
+<article class="post">
+  <header class="post__header">
+    
+      <div class="post__header-image">
+        <img src="/images/headers/cascada_script_intro.jpg" alt="Introduction to CascadaScript: Concurrent by Default, Sequential by Exception" class="post__header-img">
+      </div>
+    
+    <h1>Introduction to CascadaScript: Concurrent by Default, Sequential by Exception</h1>
+    <div class="post__details">
+      <time datetime="2026-04-30">
+        30 Apr 2026
+      </time>
+      <span> | </span>
+      <span>10 min read</span>
+    </div>
+  </header>
+
+  <main class="post__content">
+    <h3>CascadaScript - Everything Runs at Once</h3>
+<p>CascadaScript is a scripting language where <strong>everything runs at once, concurrently</strong> - every statement, every part of every expression, every step inside every function call, every iteration of every loop, every task in every imported script - and an operation only <strong>waits when it actually depends</strong> on another's result. And the final result is identical to sequential execution - just dramatically faster.</p>
+<p>It is a specialized scripting language designed for orchestrating complex asynchronous workflows in JavaScript and TypeScript applications. It is not a general-purpose programming language - instead, it acts as a <strong>data-orchestration</strong> layer for coordinating APIs, databases, LLMs, and other I/O-bound operations with maximum concurrency and minimal boilerplate.</p>
+<h4><strong>Ordinary Syntax, Extraordinary Power</strong></h4>
+<p>What makes it extraordinary is how ordinary the syntax looks: instantly familiar to any JavaScript or Python developer. It uses familiar syntax and language constructs while offering language-level support for boilerplate-free concurrent workflows, explicit control over side effects, deterministic output construction, and dataflow-based error handling with recovery rollbacks.</p>
+<p>Cascada is particularly well suited for:</p>
+<ul>
+<li><strong>AI, agents, and LLM orchestration</strong> - chain prompts, tools, and retrieval calls without juggling promises (see <a href="https://github.com/geleto/casai">Casai</a>, an AI orchestration library built on Cascada)</li>
+<li><strong>Data pipelines</strong> - coordinate parallel stages while keeping the final result deterministic</li>
+<li><strong>ETL workflows</strong> - write complex extraction, transformation, validation, enrichment, and loading flows in ordinary code that runs concurrently</li>
+<li><strong>High-throughput I/O coordination</strong> - squeeze maximum concurrency out of API-heavy workloads</li>
+</ul>
+<p>Cascada is open source - explore the project on <a href="https://github.com/geleto/cascada">GitHub</a>.</p>
+<hr>
+<h2>Quick Links</h2>
+<ul>
+<li>📖 <a href="https://geleto.github.io/cascada-script/">CascadaScript Specification</a> - the full language reference</li>
+<li>🍳 <a href="https://geleto.github.io/posts/cascada-kitchen-chef/">The Kitchen Chef's Guide to Taming Chaos</a> - the intuitive, no-jargon explanation that everyone can understand</li>
+<li>🧩 <a href="https://github.com/geleto/cascada">Cascada GitHub Repository</a> - open source · <code>npm install cascada-engine</code></li>
+<li>🤖 <a href="https://github.com/geleto/casai">Casai</a> - an AI orchestration library built on Cascada for effortless, concurrent agent and workflow design.</li>
+<li>🧪 <a href="https://github.com/geleto/casai-examples">Casai Examples</a> - a collection of practical examples demonstrating AI agent patterns using Casai.</li>
+</ul>
+<hr>
+<h3>The Nightmare: Why Async Programming Is So Hard</h3>
+<p><code>async/await</code> is a huge improvement over callback hell. But the moment you want performance, you're back to being a concurrency expert.</p>
+<p><strong>The fundamental problem: you manually orchestrate what runs when.</strong> Which operations can run together? Which must wait? You figure it out yourself, every time.</p>
+<h4><strong>Shared State</strong></h4>
+<p>All operations read and write to shared variables or objects. The complexity explodes:</p>
+<ul>
+<li>
+<p><strong>Manual dependency tracking.</strong> Should operation A <code>await</code> operation B before updating state? Which operations can safely run concurrently? You trace through every possible execution order in your head.</p>
+</li>
+<li>
+<p><strong>Get the order wrong: race conditions.</strong> Operation A reads a value, operation B modifies it, operation A writes based on the stale value. Your state is corrupted.</p>
+</li>
+<li>
+<p><strong>Over-serialize to be safe?</strong> Make everything <code>await</code> everything else to avoid conflicts. Now your concurrent code runs sequentially anyway.</p>
+</li>
+<li>
+<p><strong>Changes ripple everywhere.</strong> Add one new operation that touches shared state? Review every other operation to ensure no new conflicts. Your code becomes brittle and impossible to refactor.</p>
+</li>
+</ul>
+<h4><strong>State Machines &amp; Batch Synchronization</strong></h4>
+<p>To avoid this complexity, most frameworks use state machines (with chokepoints between states) or batch synchronization (concurrent tasks that must all complete). Simpler to reason about, but: 19 API calls finish in 50ms, one takes 3 seconds. Everything waits at the chokepoint for the slowest operation-and you still manually coordinate the convergence.</p>
+<p><strong>The payoff for getting this right is enormous</strong>-optimal orchestration can cut response times in half or more. But the manual complexity? That's where code breaks.</p>
+<p>What if you could skip the manual orchestration entirely? That's exactly what <strong><a href="https://geleto.github.io/cascada-script/">CascadaScript</a></strong> does.</p>
+<p>Let's dive into how it flips the script on async programming.</p>
+<hr>
+<h2>1. ⚡ Concurrent by Default</h2>
+<p>The most fundamental shift in Cascada is that it's <strong>concurrent by default</strong>. In most languages, code runs line by line, one after the other. In Cascada, any independent lines of code run at the same time.</p>
+<p>Think about fetching a user's profile, their preferences, and their analytics. These are three separate operations that don't depend on each other. In traditional JavaScript, you'd need <code>Promise.all</code> to run them concurrently. Cascada does it automatically.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// These three operations start at the same time, automatically!</span>
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> preferences <span class="token operator">=</span> <span class="token function">getUserPreferences</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> analytics <span class="token operator">=</span> <span class="token function">getAnalytics</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+
+<span class="token comment">// `return` produces the script's output</span>
+<span class="token keyword">return</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">user</span><span class="token operator">:</span> user<span class="token punctuation">,</span>
+  <span class="token literal-property property">preferences</span><span class="token operator">:</span> preferences<span class="token punctuation">,</span>
+  <span class="token literal-property property">analytics</span><span class="token operator">:</span> analytics
+<span class="token punctuation">}</span></code></pre>
+<p>No <code>Promise.all</code>, no <code>await</code>, no special syntax. If it <em>can</em> run concurrently, it <em>will</em>.</p>
+<hr>
+<h2>2. 🚦 Data-Driven Flow: Code Runs When Its Inputs Are Ready</h2>
+<p>You might be thinking, &quot;What if one operation <em>does</em> depend on another?&quot; Cascada has you covered.</p>
+<p>The engine automatically analyzes the data dependencies in your script. An operation will only run once all the variables it needs are ready. This simple rule guarantees the correct order of execution and <strong>completely eliminates race conditions by design</strong>.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// 1. This runs first</span>
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 2. This depends on 'user', so Cascada waits for it to resolve</span>
+<span class="token keyword">var</span> greeting <span class="token operator">=</span> <span class="token string">"Hello, "</span> <span class="token operator">+</span> user<span class="token punctuation">.</span>name
+
+<span class="token comment">// 3. Meanwhile, these run concurrently with everything above</span>
+<span class="token keyword">var</span> posts <span class="token operator">=</span> <span class="token function">fetchPosts</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> comments <span class="token operator">=</span> <span class="token function">fetchComments</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+
+<span class="token keyword">return</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">greeting</span><span class="token operator">:</span> greeting<span class="token punctuation">,</span>
+  <span class="token literal-property property">posts</span><span class="token operator">:</span> posts<span class="token punctuation">,</span>
+  <span class="token literal-property property">comments</span><span class="token operator">:</span> comments
+<span class="token punctuation">}</span></code></pre>
+<p>Here, <code>greeting</code> won't be calculated until <code>fetchUser(123)</code> is complete and the <code>user</code> variable has a value. But <code>posts</code> and <code>comments</code> start fetching immediately since they don't depend on <code>user</code>.</p>
+<p>No more subtle timing bugs that only appear in production. The engine orchestrates everything automatically.</p>
+<hr>
+<h2>3. ✨ No More <code>await</code>: Just Use Your Values</h2>
+<p>This is where the magic really happens. Notice the lack of <code>await</code> in the examples above? In Cascada, you never have to think about whether a variable holds a value or a promise. You just use it.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Traditional JavaScript: Promise hell</span>
+<span class="token keyword">const</span> userPromise <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> name <span class="token operator">=</span> <span class="token keyword">await</span> userPromise<span class="token punctuation">.</span>name<span class="token punctuation">;</span> <span class="token comment">// Wait, can't do this!</span>
+<span class="token keyword">const</span> actualUser <span class="token operator">=</span> <span class="token keyword">await</span> userPromise<span class="token punctuation">;</span>
+<span class="token keyword">const</span> name <span class="token operator">=</span> actualUser<span class="token punctuation">.</span>name<span class="token punctuation">;</span> <span class="token comment">// Finally!</span></code></pre>
+<p>Cascada makes this completely invisible:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Cascada: Just use it</span>
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>
+
+<span class="token keyword">return</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">greeting</span><span class="token operator">:</span> <span class="token string">"Hello, "</span> <span class="token operator">+</span> user<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+  <span class="token literal-property property">email</span><span class="token operator">:</span> user<span class="token punctuation">.</span>email<span class="token punctuation">,</span>
+  <span class="token literal-property property">status</span><span class="token operator">:</span> <span class="token string">"active"</span> <span class="token keyword">if</span> user<span class="token punctuation">.</span>isActive <span class="token keyword">else</span> <span class="token string">"inactive"</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Forget <code>.then()</code> and forget manually tracking promises. Cascada handles the asynchronous state invisibly under the hood. You can pass a &quot;future value&quot; (a promise) into a function or use it in an expression, and it just works.</p>
+<p>This lets you focus entirely on your business logic, not the async plumbing.</p>
+<hr>
+<h2>4. 📋 From Chaos to Order: Channels</h2>
+<p>So far we've used a simple <code>return</code> to produce output. But what happens when concurrent code needs to <em>contribute</em> to the output? Imagine fetching three users at once and collecting their names:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> userIds <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">101</span><span class="token punctuation">,</span> <span class="token number">102</span><span class="token punctuation">,</span> <span class="token number">103</span><span class="token punctuation">]</span>
+<span class="token comment">// We want all three fetched concurrently - but how do we collect the results in order?</span></code></pre>
+<p>In a traditional concurrent loop, you'd push to a shared array and pray the order works out. In Cascada, you reach for a <strong>channel</strong>.</p>
+<p>A channel is a declared, write-only buffer. You write to it from anywhere - including concurrent loop iterations - and Cascada guarantees the assembled result is always in source-code order. To read the value out, call <code>.snapshot()</code>.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> userIds <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">101</span><span class="token punctuation">,</span> <span class="token number">102</span><span class="token punctuation">,</span> <span class="token number">103</span><span class="token punctuation">]</span>
+
+<span class="token comment">// Declare a data channel</span>
+data result
+
+<span class="token comment">// All three fetchUserDetails calls run concurrently.</span>
+<span class="token comment">// Maybe user 103's data comes back first - that's fine.</span>
+<span class="token keyword">for</span> id <span class="token keyword">in</span> userIds
+  <span class="token keyword">var</span> details <span class="token operator">=</span> <span class="token function">fetchUserDetails</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+  result<span class="token punctuation">.</span>users<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>details<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+endfor
+
+<span class="token comment">// `snapshot()` materializes the channel into a value</span>
+<span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token function">snapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">// { "users": ["Alice", "Bob", "Charlie"] } - always in this order</span></code></pre>
+<p>Cascada provides three built-in channel types:</p>
+<ul>
+<li><strong><code>data</code></strong> - for building structured objects and arrays. Supports <code>.push()</code>, <code>.merge()</code>, property assignment, arithmetic operators, and more. The right tool for shaping JSON output.</li>
+<li><strong><code>text</code></strong> - for accumulating strings. Calls like <code>log(&quot;hello&quot;)</code> append text in source-code order, perfect for streaming or building reports.</li>
+<li><strong><code>sequence</code></strong> - wraps an external object so reads and calls happen in strict source-code order; ideal for stateful APIs like a database client where order matters. We'll come back to this one in the next section.</li>
+</ul>
+<pre class="language-javascript"><code class="language-javascript">text log
+<span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Starting import\n"</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> user <span class="token keyword">in</span> users
+  <span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Imported: "</span> <span class="token operator">+</span> user<span class="token punctuation">.</span>name <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">)</span>
+endfor
+<span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Done."</span><span class="token punctuation">)</span>
+<span class="token keyword">return</span> log<span class="token punctuation">.</span><span class="token function">snapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+<p>This gives you the best of both worlds: maximum I/O performance from concurrent execution, with the reliability of deterministic, source-order assembly.</p>
+<hr>
+<h2>5. ➡️ Sequential by Exception</h2>
+<p>Of course, sometimes you absolutely need things to happen in a specific order - especially when dealing with operations that have side effects, like writing to a database or making stateful API calls.</p>
+<p>For these cases, Cascada provides three surgical tools. Each one sequences only what it touches, leaving the rest of the script free to run concurrently.</p>
+<p><strong>The <code>!</code> marker</strong> - enforces strict sequential order on a context object path. Perfect for stateful APIs like database handles or external services.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// `bank.account` is provided by the render context.</span>
+<span class="token comment">// 1. This MUST finish first</span>
+bank<span class="token punctuation">.</span>account<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">deposit</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span>
+<span class="token comment">// 2. This waits for deposit to complete</span>
+bank<span class="token punctuation">.</span>account<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">// 3. This waits for getStatus</span>
+bank<span class="token punctuation">.</span>account<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">withdraw</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Meanwhile, these run concurrently with everything above</span>
+<span class="token keyword">var</span> preferences <span class="token operator">=</span> <span class="token function">getUserPreferences</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> analytics <span class="token operator">=</span> <span class="token function">fetchAnalytics</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+<p><strong>The <code>each</code> loop</strong> - iterates one item at a time. Use it when per-iteration side effects must not overlap.</p>
+<pre class="language-javascript"><code class="language-javascript">each id <span class="token keyword">in</span> idsToWrite
+  db<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>   <span class="token comment">// each write completes before the next starts</span>
+endeach</code></pre>
+<p><strong>The <code>sequence</code> channel</strong> - wraps an external object so all reads and calls happen in strict source-code order. Use it when the object itself is your ordered interface.</p>
+<pre class="language-javascript"><code class="language-javascript">sequence db <span class="token operator">=</span> services<span class="token punctuation">.</span>db
+<span class="token keyword">var</span> user <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> state <span class="token operator">=</span> db<span class="token punctuation">.</span>connectionState</code></pre>
+<p>It's <strong>concurrent by default, sequential by exception</strong> - the opposite of traditional programming. You only pay for ordering where you actually need it.</p>
+<hr>
+<h2>6. ☣️ Errors Flow Like Data</h2>
+<p>Traditional <code>try/catch</code> blocks don't work well in a massively concurrent system. If one of fifty concurrent API calls fails, should everything stop?</p>
+<p>Cascada uses a more resilient model called <strong>dataflow poisoning</strong>. When an operation fails, it doesn't throw an exception; it produces an <code>Error Value</code>. This error then &quot;poisons&quot; any other variable or operation that depends on it. Crucially, unrelated operations continue running completely unaffected.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Three concurrent calls - fetchPosts() fails, the others succeed</span>
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>         <span class="token comment">// ✅ Succeeds</span>
+<span class="token keyword">var</span> posts <span class="token operator">=</span> <span class="token function">fetchPosts</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>       <span class="token comment">// ❌ Fails and becomes an Error Value</span>
+<span class="token keyword">var</span> comments <span class="token operator">=</span> <span class="token function">fetchComments</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span> <span class="token comment">// ✅ Succeeds</span>
+
+<span class="token comment">// Now, let's see what happens:</span>
+<span class="token keyword">var</span> userName <span class="token operator">=</span> user<span class="token punctuation">.</span>name           <span class="token comment">// ✅ Works fine, uses the successful result</span>
+<span class="token keyword">var</span> commentCount <span class="token operator">=</span> comments<span class="token punctuation">.</span>length <span class="token comment">// ✅ Works fine - unrelated to posts</span>
+<span class="token keyword">var</span> postCount <span class="token operator">=</span> posts<span class="token punctuation">.</span>length       <span class="token comment">// ❌ Becomes an error because 'posts' is poisoned</span>
+
+<span class="token comment">// Detect with `is error` and provide fallbacks</span>
+<span class="token keyword">if</span> posts is error
+  posts <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>           <span class="token comment">// Assign a default</span>
+  postCount <span class="token operator">=</span> <span class="token number">0</span>
+endif
+
+<span class="token keyword">return</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">userName</span><span class="token operator">:</span> userName<span class="token punctuation">,</span>
+  <span class="token literal-property property">postCount</span><span class="token operator">:</span> postCount<span class="token punctuation">,</span>
+  <span class="token literal-property property">commentCount</span><span class="token operator">:</span> commentCount
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Poisoning extends to control flow, too.</strong> If the condition of an <code>if</code> or <code>switch</code> is an Error Value, neither branch runs - and any variable that <em>would have been</em> modified in either branch becomes poisoned. The same applies to loops: a poisoned iterable poisons everything the loop body would have touched.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> role <span class="token operator">=</span> <span class="token string">"guest"</span>
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span>  <span class="token comment">// ❌ Fails</span>
+
+<span class="token comment">// `user.isAdmin` is poisoned, so neither branch executes</span>
+<span class="token keyword">if</span> user<span class="token punctuation">.</span>isAdmin
+  role <span class="token operator">=</span> <span class="token string">"admin"</span>
+<span class="token keyword">else</span>
+  role <span class="token operator">=</span> <span class="token string">"member"</span>
+endif
+
+<span class="token comment">// `role` is now poisoned - both branches would have written to it,</span>
+<span class="token comment">// so the engine can't safely leave it as "guest"</span></code></pre>
+<p>This ensures corrupted state can't silently slip past as a stale default value. If something would have been touched, it carries the failure forward.</p>
+<p>You can also peek inside an Error Value using the <strong><code>#</code> operator</strong> to inspect its details - message, source, and more - without triggering further propagation:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">if</span> posts is error
+  <span class="token keyword">var</span> msg <span class="token operator">=</span> posts#message
+  <span class="token keyword">var</span> origin <span class="token operator">=</span> posts#source<span class="token punctuation">.</span>origin
+endif</code></pre>
+<p>This approach isolates failures, prevents corrupted data from producing incorrect results, and makes your workflows incredibly robust. The beauty of dataflow poisoning is that you have <strong>complete control over recovery</strong>: detect errors anywhere with <code>is error</code>, repair them with fallbacks, log them for monitoring, or retry - all while the rest of your script continues executing normally.</p>
+<hr>
+<h2>7. 🛡️ Transactional Recovery with <code>guard</code></h2>
+<p>For higher-stakes operations - like database writes that span multiple steps - a single fallback isn't enough. You need to roll back. The <code>guard</code> block is Cascada's transactional recovery primitive: it acts like a save point. If anything inside fails, the channel writes and sequential paths from before the guard are automatically restored.</p>
+<pre class="language-javascript"><code class="language-javascript">data out
+
+guard
+  out<span class="token punctuation">.</span>status <span class="token operator">=</span> <span class="token string">"processing"</span>
+
+  db<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  db<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
+  db<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>account<span class="token punctuation">)</span>   <span class="token comment">// ❌ Suppose this fails</span>
+  db<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  out<span class="token punctuation">.</span>status <span class="token operator">=</span> <span class="token string">"success"</span>
+
+recover err
+  <span class="token comment">// STATE RESTORED automatically:</span>
+  <span class="token comment">//  - data writes inside the guard are reverted</span>
+  <span class="token comment">//  - the db! sequential path is repaired and safe to use again</span>
+  db<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  out<span class="token punctuation">.</span>error <span class="token operator">=</span> <span class="token string">"Transaction failed: "</span> <span class="token operator">+</span> err#message
+endguard
+
+<span class="token keyword">return</span> out<span class="token punctuation">.</span><span class="token function">snapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+<p>By default, <code>guard</code> protects all channels and sequential paths in scope. The <code>recover</code> block runs only if the guarded code finished in an error state, with the cleanup state already in place. It's like a database transaction - except for your entire workflow.</p>
+<hr>
+<h2>8. 💡 Familiar Syntax</h2>
+<p>Cascada offers a clean, expressive syntax that will feel instantly familiar if you know JavaScript. Variables, conditionals, loops, and reusable functions all work the way you'd expect.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variables</td>
+<td><code>var name = value</code></td>
+</tr>
+<tr>
+<td>Conditionals</td>
+<td><code>if / elif / else / endif</code></td>
+</tr>
+<tr>
+<td>Switch</td>
+<td><code>switch / case / default / endswitch</code></td>
+</tr>
+<tr>
+<td>Logic operators</td>
+<td><code>and</code>, <code>or</code>, <code>not</code> (Python-style)</td>
+</tr>
+<tr>
+<td>Concurrent loop</td>
+<td><code>for item in array</code></td>
+</tr>
+<tr>
+<td>Sequential loop</td>
+<td><code>each item in array</code></td>
+</tr>
+<tr>
+<td>While loop</td>
+<td><code>while condition / endwhile</code></td>
+</tr>
+<tr>
+<td>Inline <code>if</code> (ternary)</td>
+<td><code>a if condition else b</code> (Python-style)</td>
+</tr>
+<tr>
+<td>Functions</td>
+<td><code>function name(x, y=&quot;default&quot;) ... endfunction</code></td>
+</tr>
+<tr>
+<td>Filters</td>
+<td><code>value | filterName(args)</code></td>
+</tr>
+<tr>
+<td>Imports</td>
+<td><code>import &quot;file&quot; as ns</code></td>
+</tr>
+<tr>
+<td>Comments</td>
+<td><code>// line</code>, <code>/* block */</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Variables, conditionals, loops</span>
+<span class="token keyword">var</span> discount <span class="token operator">=</span> <span class="token number">0</span>
+
+<span class="token keyword">if</span> userType <span class="token operator">==</span> <span class="token string">"premium"</span>
+  discount <span class="token operator">=</span> <span class="token number">0.10</span>
+endif
+
+<span class="token comment">// Reusable functions with default and keyword arguments</span>
+<span class="token keyword">function</span> <span class="token function">formatPrice</span><span class="token punctuation">(</span><span class="token parameter">amount<span class="token punctuation">,</span> discount<span class="token operator">=</span><span class="token number">0</span></span><span class="token punctuation">)</span>
+  <span class="token keyword">var</span> final <span class="token operator">=</span> amount <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">-</span> discount<span class="token punctuation">)</span>
+  <span class="token keyword">return</span> <span class="token string">"$"</span> <span class="token operator">+</span> final
+endfunction
+
+<span class="token keyword">return</span> <span class="token function">formatPrice</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> discount<span class="token punctuation">)</span>  <span class="token comment">// "$90"</span></code></pre>
+<p>You get variables (<code>var</code>), conditionals (<code>if/elif/else</code>), concurrent (<code>for</code>) and sequential (<code>each</code>, <code>while</code>) loops, reusable <code>function</code> definitions, and modular code organization through <code>import</code> and <code>extends</code>.</p>
+<hr>
+<h2>🚀 Putting It All Together</h2>
+<p>Cascada is <code>a work in progress</code> under active development and evolving quickly. Install it with:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> cascada-engine</code></pre>
+<p>Here's a realistic example: a customer dashboard endpoint that aggregates data from three APIs, enriches each order, recovers from missing recommendations, and logs the access - all from a single Cascada script.</p>
+<p><strong>JavaScript context:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> AsyncEnvironment <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'cascada-engine'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> env <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AsyncEnvironment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> context <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">userId</span><span class="token operator">:</span> <span class="token number">42</span><span class="token punctuation">,</span>
+
+  <span class="token comment">// Three independent data sources</span>
+  <span class="token function-variable function">fetchUser</span><span class="token operator">:</span>            <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token operator">=></span> api<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/users/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">fetchOrders</span><span class="token operator">:</span>          <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token operator">=></span> api<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/users/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/orders</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">fetchRecommendations</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token operator">=></span> recommender<span class="token punctuation">.</span><span class="token function">suggestFor</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+  <span class="token comment">// Per-order enrichment - runs concurrently for each order</span>
+  <span class="token function-variable function">enrichOrder</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">order</span><span class="token punctuation">)</span> <span class="token operator">=></span> api<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/orders/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>order<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/details</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+  <span class="token comment">// Stateful service for audit logging</span>
+  <span class="token literal-property property">audit</span><span class="token operator">:</span> auditLogger<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> dashboard <span class="token operator">=</span> <span class="token keyword">await</span> env<span class="token punctuation">.</span><span class="token function">renderScriptString</span><span class="token punctuation">(</span>script<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong>Cascada script:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Three sources fetched concurrently</span>
+<span class="token keyword">var</span> user <span class="token operator">=</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span>
+<span class="token keyword">var</span> orders <span class="token operator">=</span> <span class="token function">fetchOrders</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span>
+<span class="token keyword">var</span> recs <span class="token operator">=</span> <span class="token function">fetchRecommendations</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span>
+
+data report
+
+<span class="token comment">// Cascada waits for `user` to resolve, then writes both properties</span>
+report<span class="token punctuation">.</span>user<span class="token punctuation">.</span>name <span class="token operator">=</span> user<span class="token punctuation">.</span>name
+report<span class="token punctuation">.</span>user<span class="token punctuation">.</span>tier <span class="token operator">=</span> <span class="token string">"premium"</span> <span class="token keyword">if</span> user<span class="token punctuation">.</span>lifetimeValue <span class="token operator">></span> <span class="token number">1000</span> <span class="token keyword">else</span> <span class="token string">"standard"</span>
+
+<span class="token comment">// Each order is enriched concurrently - but the final array is in source order</span>
+<span class="token keyword">for</span> order <span class="token keyword">in</span> orders
+  <span class="token keyword">var</span> details <span class="token operator">=</span> <span class="token function">enrichOrder</span><span class="token punctuation">(</span>order<span class="token punctuation">)</span>
+  report<span class="token punctuation">.</span>orders<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">id</span><span class="token operator">:</span> order<span class="token punctuation">.</span>id<span class="token punctuation">,</span>
+    <span class="token literal-property property">total</span><span class="token operator">:</span> details<span class="token punctuation">.</span>total<span class="token punctuation">,</span>
+    <span class="token literal-property property">status</span><span class="token operator">:</span> details<span class="token punctuation">.</span>status
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+endfor
+
+<span class="token comment">// Recommendations are nice-to-have - recover with an empty list if they fail</span>
+<span class="token keyword">if</span> recs is error
+  recs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+endif
+report<span class="token punctuation">.</span>recommendations <span class="token operator">=</span> recs
+
+<span class="token comment">// Audit the access - `!` keeps log calls sequential</span>
+<span class="token comment">// without slowing anything else down</span>
+audit<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"dashboard_viewed"</span><span class="token punctuation">,</span> userId<span class="token punctuation">)</span>
+
+<span class="token keyword">return</span> report<span class="token punctuation">.</span><span class="token function">snapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+<p>In one short script you've got three concurrent API calls, a concurrent enrichment loop with deterministic ordering, error recovery for non-critical data, and a sequential side effect - without <code>Promise.all</code>, <code>await</code>, or a single race condition to reason about.</p>
+<p><strong>⚠️ Heads up!</strong> Cascada is a new project. You might run into bugs, and the documentation is catching up with the code. Your feedback and contributions are welcome as we build the future of asynchronous programming.</p>
+<hr>
+<h2>🎯 Why This Matters</h2>
+<p>Cascada isn't trying to replace JavaScript - it's designed to be the backbone of your data layer.</p>
+<p>Use it to compose complex workflows that wire together LLMs, APIs, databases, and external services. By inverting the traditional programming model - concurrent by default, sequential by exception - it lets you build high-performance data pipelines that are surprisingly simple and intuitive, all with maximum I/O throughput and minimum mental overhead.</p>
+<p>The result? <strong>Code that reads like synchronous logic but executes with the performance of carefully orchestrated async operations.</strong> You get to focus on <em>what</em> you're building instead of <em>how</em> to manage promises, race conditions, and execution order.</p>
+<p>And the best part? When you look at your Cascada script six months later, you'll actually understand what it does.</p>
+<hr>
+<h2>Final Thoughts</h2>
+<p>If you've ever fought through promise hell, callback pyramids, or race conditions, Cascada might just feel like magic.</p>
+<p>It turns async programming from a juggling act into a walk in the park. You write code like a human - simple, sequential, intuitive - and let the runtime handle the concurrency and safety behind the scenes.</p>
+<p>The future of async programming isn't about getting better at promises. It's about not having to think about them at all.</p>
+
+  </main>
+
+  <aside class="post__aside">
+    <div class="post__tags">
+      
+        
+        <a href="/tags/cascada/">#cascada</a>
+      
+        
+        <a href="/tags/async/">#async</a>
+      
+        
+        <a href="/tags/concurrency/">#concurrency</a>
+      
+        
+        <a href="/tags/concurrent-programming/">#concurrent-programming</a>
+      
+        
+        <a href="/tags/javascript/">#javascript</a>
+      
+        
+        <a href="/tags/typescript/">#typescript</a>
+      
+        
+        <a href="/tags/dataflow/">#dataflow</a>
+      
+    </div>
+
+    <nav class="post__pagination">
+
+        <a href="/posts/everything-everywhere-all-at-once/">
+          <span>Everything Everywhere All at Once</span>
+          <span>→</span>
+        </a>
+
+      
+    </nav>
+  </aside>
+
+</article>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+
+          <ul class="hero__social-links">
+            
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://github.com/geleto" target="_blank" rel="noopener noreferrer" >GitHub</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://x.com/thegeletohttps://twitter.com/" target="_blank" rel="noopener noreferrer" >X</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://www.linkedin.com/in/angel-popov/" target="_blank" rel="noopener noreferrer" >LinkedIn</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://www.facebook.com/geleto" target="_blank" rel="noopener noreferrer" >Facebook</a>
+                </li>
+              
+            
+
+            
+
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="/feed.xml" target="_blank" rel="noopener noreferrer" >RSS</a>
+                </li>
+              
+            
+          </ul>
+
+          
+            <p class="footer__attribution">
+              <a href="https://www.11ty.dev" target="_blank" rel="noopener">11ty</a> <a href="https://github.com/yinkakun/eleventy-duo" target="_blank" rel="noopener noreferrer"> theme </a> by <a href="https://twitter.com/yinkakun" target="_blank" rel="noopener">Yinka,</a>
+            </p>
+          
+
+        </div>
+      </div>
+
+    </footer>
+
+    <script src="/assets/main.31d6cfe0d16ae931b73c.js"></script>
+  </body>
+</html>
